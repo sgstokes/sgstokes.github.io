@@ -1,0 +1,671 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+   <head>
+      <title>Year Calendar</title>
+   </head>
+   <body dir='ltr' onload='loadFunction()' onselectstart='return false'>
+      <center>
+         <form onsubmit='return display(0);' style='margin:8px 0; display:block'>
+            <button onclick='display(-1)'>&nbsp;&laquo;&nbsp;</button>&nbsp;
+            <input id='yearInput' maxlength='4' size='4' style='width: 4em' value='' />&nbsp;
+            <button onclick='display(1)'>&nbsp;&raquo;&nbsp;</button>&nbsp;
+            <input onclick='display(0)' type='submit' value='Go' />&nbsp;
+            <button onclick='displayCurrentYear()'>This year</button>&nbsp;
+            <select id='monthCountInput' onchange='display(0)'>
+               <option value='12'>12</option>
+               <option value='16'>16</option>
+               <option value='20'>20</option>
+               <option value='24'>24</option>
+            </select>
+         </form>
+      </center>
+      <div align='center' id='calDiv'></div>
+      <script>
+        /** The full names of the months to use as titles */
+        var MONTH_NAMES = ['January', 'February', 'March',
+            'April', 'May', 'June', 'July',
+            'August', 'September', 'October',
+            'November', 'December'
+        ];
+
+        /** The days of week to use as headings */
+        var DOW = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+
+        /** The lengths of the months */
+        var DAYS_IN_MONTH = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+        /** Holidays for formatting */
+        var HOLIDAYS = [
+            '9/3/2018',
+            ,'11/22/2018'
+            ,'11/23/2018'
+            ,'12/24/2018'
+            ,'12/25/2018'
+            ,'12/26/2018'
+            ,'1/1/2019'
+            ,'1/21/2019'
+            ,'2/18/2019'
+            ,'4/19/2019'
+            ,'5/27/2019'
+            ,'7/4/2019'
+            ,'9/2/2019'
+            ,'11/28/2019'
+            ,'11/29/2019'
+            ,'12/24/2019'
+            ,'12/25/2019'
+            ,'12/26/2019'
+            ,'1/1/2020'
+            ,'1/20/2020'
+            ,'2/17/2020'
+            ,'4/10/2020'
+            ,'5/25/2020'
+            ,'7/3/2020'
+            ,'9/7/2020'
+            ,'11/26/2020'
+            ,'11/27/2020'
+            ,'12/24/2020'
+            ,'12/25/2020'
+        ];
+
+        /** Vacation days for formatting */
+        var VACATIONS = [
+            '9/21/2018'
+            ,'11/21/2018'
+            ,'12/27/2018'
+            ,'12/28/2018'
+            ,'12/31/2018'
+            ,'3/15/2019'
+            ,'4/8/2019'
+            ,'4/9/2019'
+            ,'4/10/2019'
+            ,'4/11/2019'
+            ,'4/12/2019'
+            ,'4/23/2019'
+            ,'5/10/2019'
+            ,'5/24/2019'
+            ,'8/29/2019'
+            ,'8/30/2019'
+            ,'11/25/2019'
+            ,'11/26/2019'
+            ,'11/27/2019'
+            ,'12/23/2019'
+            ,'12/27/2019'
+            ,'12/30/2019'
+            ,'12/31/2019'
+        ];
+
+        /**
+         * Given a date, check if it is a leap year.
+         * @param {Date} date The date in question.
+         * @return {boolean} Whether it is a leap year.
+         */
+        function isLeapYear(date) {
+            var y = date.getFullYear();
+            if ((y % 4) == 0 && (y % 100) != 0) {
+                return true;
+            }
+            return (y % 400) == 0;
+        }
+
+        /**
+         * Get the number of days in a month.
+         * @param {Date} date The date in question.
+         * @return {number} The number of days in that month.
+         */
+        function getDaysInMonth(date) {
+            var days = DAYS_IN_MONTH[date.getMonth()];
+            return (days == 28 && isLeapYear(date)) ? 29 : days;
+        }
+
+        /**
+         * How many weeks does a given month overlap?
+         * @param {number} y The year.
+         * @param {number} m The month.
+         * @return {number} The number of weeks that the month overlap.
+         */
+        function getWeeksInMonth(y, m) {
+            var firstDate = new Date(y, m, 1);
+            var firstDayOfMonth = firstDate.getDay();
+            var daysInMonth = getDaysInMonth(firstDate);
+
+            return Math.ceil((firstDayOfMonth + daysInMonth) / 7)
+        }
+
+        /**
+         * Get the text input for the year.
+         * @return {HTMLElement} The element.
+         */
+        function getYearInput() {
+            return document.getElementById('yearInput');
+        }
+
+        /**
+         * Get the text input for the month count.
+         * @return {HTMLElement} The element.
+         */
+        function getmonthCountInput() {
+            return document.getElementById('monthCountInput');
+        }
+
+        /**
+         * Display the current year.
+         * @param {string} opt_override An override year.
+         */
+        function displayCurrentYear(opt_override) {
+            var year = opt_override || (new Date()).getFullYear();
+            getYearInput().value = year;
+            showYear(year);
+        }
+
+        /**
+         * Display a year offset from the current one.
+         * @param {number} delta How many years to move.
+         */
+        function display(delta) {
+            var yearInput = getYearInput();
+            yearInput.value.replace(/[^0-9]/g, '');
+            var y = parseInt(yearInput.value, 10) + delta;
+            if (isNaN(y) || y > 9999 || y < 1) {
+                yearInput.value = '?';
+            } else {
+                yearInput.value = y;
+                showYear(y);
+            }
+            return false;
+        }
+
+        /**
+         * Get the HTML for a specific month.
+         * @param {Array<string>} out The string buffer to append the output.
+         * @param {number} y The year.
+         * @param {number} m The month.
+         * @param {number} opt_weeks The minimum number of weeks to display.
+         */
+        function getMonthHtml(out, y, m, opt_weeks) {
+            var today = new Date();
+            var todayYear = today.getFullYear();
+            var todayMonth = today.getMonth();
+            var todayDate = today.getDate();
+
+            if (m > 11) {
+                m = m - 12;
+                y = y + 1;
+            }
+
+            out.push('<table class="month" border=0 cellspacing=0 onselectstart="return false">',
+                '<tr><td colspan=7 onmouseover="hover(this)" onmousedown="highlight(this)" ',
+                'onmouseout="cursorClear()" class="monthHeader">',
+                MONTH_NAMES[m], ' ', y, '<tr>');
+
+            for (var i = 0; i < DOW.length; ++i) {
+                out.push('<td class="dow" style="color:black">', DOW[i]);
+            }
+            var firstDate = new Date(y, m, 1);
+            var firstDayOfMonth = firstDate.getDay();
+            var daysInMonth = getDaysInMonth(firstDate);
+            var i = 0;
+            var weeks = 0;
+            var minWeeks = opt_weeks || Math.ceil(daysInMonth / 7);
+
+            for (var d = 1 - firstDayOfMonth; 1; ++d) {
+                var dow = i++ % 7;
+
+                if (minWeeks <= weeks && dow == 0) {
+                    break;
+                }
+                if (dow == 0) {
+                    out.push('<tr>');
+                    ++weeks;
+                }
+
+                out.push('<td onmouseover="hover(this)" onmousedown="highlight(this)" ',
+                    'onmouseout="cursorClear()" class="');
+                var c = 'normal';
+                if (y == todayYear && m == todayMonth && d == todayDate) {
+                    c = 'today';
+                } else {
+
+                    if ((d <= daysInMonth) && ((dow == 0) || (dow == 6))) {
+                        c = ' weekend';
+                    }
+                    for (var v = 0; v < VACATIONS.length; ++v) {
+                        if (VACATIONS[v] == m + 1 + '/' + d + '/' + y &&
+                            d >= 1 &&
+                            d <= daysInMonth) {
+                            c += ' vacation';
+                        }
+                    }
+                    for (var h = 0; h < HOLIDAYS.length; ++h) {
+                        if (HOLIDAYS[h] == m + 1 + '/' + d + '/' + y &&
+                            d >= 1 &&
+                            d <= daysInMonth) {
+                            c += ' holiday';
+                        }
+                    }
+                }
+                out.push(c, '">');
+                if (d >= 1 && d <= daysInMonth) {
+                    out.push(d);
+                } else {
+                    out.push('&nbsp;');
+                }
+            }
+            out.push('</table>');
+        }
+
+        /**
+         * This is the main drawing function. It will display a specific year.
+         * @param {number} year The year to draw.
+         */
+        function showYear(y) {
+            var out = ['<table>'];
+            var weeks = 0;
+
+            for (var m = 0, mm = getmonthCountInput().value; m < mm; ++m) {
+                // Every 4 months, we start a new row.
+                if (m % 4 == 0) {
+                    out.push('<tr>');
+
+                    // Calculate the maximum number of weeks for the months in this row.
+                    weeks = Math.max(getWeeksInMonth(y, m), getWeeksInMonth(y, m + 1),
+                        getWeeksInMonth(y, m + 2), getWeeksInMonth(y, m + 3));
+                }
+                out.push('<td class="outer">');
+                getMonthHtml(out, y, m, weeks);
+            }
+            out.push('</table>');
+            document.getElementById('calDiv').innerHTML = out.join('');
+        }
+
+        function loadFunction() {
+            var today = new Date();
+            var todayMonth = today.getMonth();
+            var monthCountInput = getmonthCountInput();
+
+            if (todayMonth > 6) {
+                monthCountInput.value = '16';
+            }
+
+            displayCurrentYear();
+        }
+
+        // Setup the style + buttons
+        var HDR_BKG = '#e3d3b2';
+        var WEEKEND = '#888';
+        var WEEKEND_BKG = '#fff';
+        var WEEKDAY = '#000';
+        var WEEKDAY_BKG = '#fff';
+        var HOLIDAY = '#a00';
+        var HOLIDAY_BKG = '#eee';
+        var VACATION = '#0a0';
+        var VACATION_BKG = '#eee';
+        var HIGHLIGHT = '#000';
+        var HIGHLIGHT_BKG = '#ff6';
+        var DOW_SIZE = '9px';
+        var BODY_BKG = '#fff';
+        var TODAY = '#fff';
+        var TODAY_BKG = '#999';
+        var TODAY_BORDER_DARK = '#000';
+        var TODAY_BORDER_LIGHT = '#000';
+        var BORDER_GREY = '#333';
+        var DIVIDER = '#888';
+
+        /**
+         * @return {string} A string containing the styles.
+         */
+        function getStyles() {
+            var out = ['<style>'];
+            out.push(
+                '.month td {padding:2px 4px 1px}',
+                '.month,td.dow,td.monthHeader {background-color:', HDR_BKG, '}',
+                'td.normal {background-color:', WEEKDAY_BKG, '; color:', WEEKDAY, '}',
+                'td.weekend {background-color:', WEEKEND_BKG, '; color:', WEEKEND, '}',
+                'td.outer {padding-right: 4px; padding-bottom: 4px }',
+                'td.dow {border-width: 0 0 1px 0; border-style:solid;',
+                'border-color: ', DIVIDER, '; font-size:', DOW_SIZE, '}',
+                'td.today {padding: 1px 3px !important; background-color:', TODAY_BKG,
+                ';color:', TODAY, '; border-width: 1px; border-style:solid;',
+                'border-color: ', TODAY_BORDER_DARK, ' ', TODAY_BORDER_LIGHT, ' ',
+                TODAY_BORDER_LIGHT, ' ', TODAY_BORDER_DARK, ' !important; font-weight:bold}',
+                'td.holiday {background-color:', HOLIDAY_BKG, '; color:', HOLIDAY, '}',
+                'td.vacation {background-color:', VACATION_BKG, '; color:', VACATION, '}',
+                'td.monthHeader {font-weight:bold}',
+                '.month {text-align:center;background-color:', HDR_BKG,
+                ';border: 1px solid ', BORDER_GREY, '}',
+                'body, td {font-family:Arial;font-size: 12px}',
+                'body {margin-left:10px; background-color:', BODY_BKG, '}',
+                'td {vertical-align: top}');
+            out.push('</style>');
+            return out.join('');
+        }
+
+        document.write(getStyles());
+
+        function highlight(elm) {
+            if (elm.innerHTML == '&nbsp;') {
+                return false;
+            }
+            if (elm.getAttribute('highlight') == HIGHLIGHT) {
+                elm.setAttribute('highlight', '');
+                elm.style.fontColor = '';
+                elm.style.color = '';
+                elm.style.backgroundColor = '';
+                elm.style.fontWeight = '';
+            } else {
+                elm.setAttribute('highlight', HIGHLIGHT);
+                elm.style.fontColor = HIGHLIGHT;
+                elm.style.color = HIGHLIGHT;
+                elm.style.backgroundColor = HIGHLIGHT_BKG;
+                elm.style.fontWeight = '700';
+            }
+        }
+
+        var mouseDown = 0;
+        document.body.onmousedown = function () {
+            mouseDown = 1;
+        }
+        document.body.onmouseup = function () {
+            mouseDown = 0;
+        }
+
+        function hover(elm) {
+            if (elm.innerHTML == '&nbsp;') {
+                return false;
+            }
+            document.body.style.cursor = 'pointer';
+            if (mouseDown == 1) {
+                highlight(elm);
+            }
+        }
+
+        function cursorClear() {
+            document.body.style.cursor = 'default';
+        }
+
+
+        //*************************************************************************************************
+        //*************************************************************************************************
+        //*************************************************************************************************
+        /**
+         * http://www.openjs.com/scripts/events/keyboard_shortcuts/
+         * Version : 2.01.B
+         * By Binny V A
+         * License : BSD
+         */
+        shortcut = {
+            'all_shortcuts': {}, //All the shortcuts are stored in this array
+            'add': function (shortcut_combination, callback, opt) {
+                //Provide a set of default options
+                var default_options = {
+                    'type': 'keydown',
+                    'propagate': false,
+                    'disable_in_input': false,
+                    'target': document,
+                    'keycode': false
+                }
+                if (!opt) opt = default_options;
+                else {
+                    for (var dfo in default_options) {
+                        if (typeof opt[dfo] == 'undefined') opt[dfo] = default_options[dfo];
+                    }
+                }
+
+                var ele = opt.target;
+                if (typeof opt.target == 'string') ele = document.getElementById(opt.target);
+                var ths = this;
+                shortcut_combination = shortcut_combination.toLowerCase();
+
+                //The function to be called at keypress
+                var func = function (e) {
+                    e = e || window.event;
+
+                    if (opt['disable_in_input']) { //Don't enable shortcut keys in Input, Textarea fields
+                        var element;
+                        if (e.target) element = e.target;
+                        else if (e.srcElement) element = e.srcElement;
+                        if (element.nodeType == 3) element = element.parentNode;
+
+                        if (element.tagName == 'INPUT' || element.tagName == 'TEXTAREA') return;
+                    }
+
+                    //Find Which key is pressed
+                    if (e.keyCode) code = e.keyCode;
+                    else if (e.which) code = e.which;
+                    var character = String.fromCharCode(code).toLowerCase();
+
+                    if (code == 188) character = ","; //If the user presses , when the type is onkeydown
+                    if (code == 190) character = "."; //If the user presses , when the type is onkeydown
+
+                    var keys = shortcut_combination.split("+");
+                    //Key Pressed - counts the number of valid keypresses - if it is same as the number of keys, the shortcut function is invoked
+                    var kp = 0;
+
+                    //Work around for stupid Shift key bug created by using lowercase - as a result the shift+num combination was broken
+                    var shift_nums = {
+                        "`": "~",
+                        "1": "!",
+                        "2": "@",
+                        "3": "#",
+                        "4": "$",
+                        "5": "%",
+                        "6": "^",
+                        "7": "&",
+                        "8": "*",
+                        "9": "(",
+                        "0": ")",
+                        "-": "_",
+                        "=": "+",
+                        ";": ":",
+                        "'": "\"",
+                        ",": "<",
+                        ".": ">",
+                        "/": "?",
+                        "\\": "|"
+                    }
+                    //Special Keys - and their codes
+                    var special_keys = {
+                        'esc': 27,
+                        'escape': 27,
+                        'tab': 9,
+                        'space': 32,
+                        'return': 13,
+                        'enter': 13,
+                        'backspace': 8,
+
+                        'scrolllock': 145,
+                        'scroll_lock': 145,
+                        'scroll': 145,
+                        'capslock': 20,
+                        'caps_lock': 20,
+                        'caps': 20,
+                        'numlock': 144,
+                        'num_lock': 144,
+                        'num': 144,
+
+                        'pause': 19,
+                        'break': 19,
+
+                        'insert': 45,
+                        'home': 36,
+                        'delete': 46,
+                        'end': 35,
+
+                        'pageup': 33,
+                        'page_up': 33,
+                        'pu': 33,
+
+                        'pagedown': 34,
+                        'page_down': 34,
+                        'pd': 34,
+
+                        'left': 37,
+                        'up': 38,
+                        'right': 39,
+                        'down': 40,
+
+                        'f1': 112,
+                        'f2': 113,
+                        'f3': 114,
+                        'f4': 115,
+                        'f5': 116,
+                        'f6': 117,
+                        'f7': 118,
+                        'f8': 119,
+                        'f9': 120,
+                        'f10': 121,
+                        'f11': 122,
+                        'f12': 123
+                    }
+
+                    var modifiers = {
+                        shift: {
+                            wanted: false,
+                            pressed: false
+                        },
+                        ctrl: {
+                            wanted: false,
+                            pressed: false
+                        },
+                        alt: {
+                            wanted: false,
+                            pressed: false
+                        },
+                        meta: {
+                            wanted: false,
+                            pressed: false
+                        } //Meta is Mac specific
+                    };
+
+                    if (e.ctrlKey) modifiers.ctrl.pressed = true;
+                    if (e.shiftKey) modifiers.shift.pressed = true;
+                    if (e.altKey) modifiers.alt.pressed = true;
+                    if (e.metaKey) modifiers.meta.pressed = true;
+
+                    for (var i = 0; k = keys[i], i < keys.length; i++) {
+                        //Modifiers
+                        if (k == 'ctrl' || k == 'control') {
+                            kp++;
+                            modifiers.ctrl.wanted = true;
+
+                        } else if (k == 'shift') {
+                            kp++;
+                            modifiers.shift.wanted = true;
+
+                        } else if (k == 'alt') {
+                            kp++;
+                            modifiers.alt.wanted = true;
+                        } else if (k == 'meta') {
+                            kp++;
+                            modifiers.meta.wanted = true;
+                        } else if (k.length > 1) { //If it is a special key
+                            if (special_keys[k] == code) kp++;
+
+                        } else if (opt['keycode']) {
+                            if (opt['keycode'] == code) kp++;
+
+                        } else { //The special keys did not match
+                            if (character == k) kp++;
+                            else {
+                                if (shift_nums[character] && e.shiftKey) { //Stupid Shift key bug created by using lowercase
+                                    character = shift_nums[character];
+                                    if (character == k) kp++;
+                                }
+                            }
+                        }
+                    }
+
+                    if (kp == keys.length &&
+                        modifiers.ctrl.pressed == modifiers.ctrl.wanted &&
+                        modifiers.shift.pressed == modifiers.shift.wanted &&
+                        modifiers.alt.pressed == modifiers.alt.wanted &&
+                        modifiers.meta.pressed == modifiers.meta.wanted) {
+                        callback(e);
+
+                        if (!opt['propagate']) { //Stop the event
+                            //e.cancelBubble is supported by IE - this will kill the bubbling process.
+                            e.cancelBubble = true;
+                            e.returnValue = false;
+
+                            //e.stopPropagation works in Firefox.
+                            if (e.stopPropagation) {
+                                e.stopPropagation();
+                                e.preventDefault();
+                            }
+                            return false;
+                        }
+                    }
+                }
+                this.all_shortcuts[shortcut_combination] = {
+                    'callback': func,
+                    'target': ele,
+                    'event': opt['type']
+                };
+                //Attach the function with the event
+                if (ele.addEventListener) ele.addEventListener(opt['type'], func, false);
+                else if (ele.attachEvent) ele.attachEvent('on' + opt['type'], func);
+                else ele['on' + opt['type']] = func;
+            },
+
+            //Remove the shortcut - just specify the shortcut and I will remove the binding
+            'remove': function (shortcut_combination) {
+                shortcut_combination = shortcut_combination.toLowerCase();
+                var binding = this.all_shortcuts[shortcut_combination];
+                delete(this.all_shortcuts[shortcut_combination])
+                if (!binding) return;
+                var type = binding['event'];
+                var ele = binding['target'];
+                var callback = binding['callback'];
+
+                if (ele.detachEvent) ele.detachEvent('on' + type, callback);
+                else if (ele.removeEventListener) ele.removeEventListener(type, callback, false);
+                else ele['on' + type] = false;
+            }
+        }
+
+        //Hotkeys for past year
+        shortcut.add('left', function () {
+            display(-1);
+        });
+        shortcut.add('j', function () {
+            display(-1);
+        });
+
+        //Hotkeys for future year
+        shortcut.add('right', function () {
+            display(1);
+        });
+        shortcut.add('k', function () {
+            display(1);
+        });
+
+        //Hotkeys for current year
+        shortcut.add('home', function () {
+            displayCurrentYear();
+        });
+        shortcut.add('t', function () {
+            displayCurrentYear();
+        });
+        shortcut.add('r', function () {
+            display(0);
+        });
+
+        //Hotkeys for month count
+        shortcut.add('up', function () {
+            getmonthCountInput().selectedIndex > 2 ? false : getmonthCountInput().selectedIndex += 1;
+            display(0);
+        });
+        shortcut.add('h', function () {
+            getmonthCountInput().selectedIndex > 2 ? false : getmonthCountInput().selectedIndex += 1;
+            display(0);
+        });
+        shortcut.add('down', function () {
+            getmonthCountInput().selectedIndex < 1 ? false : getmonthCountInput().selectedIndex -= 1;
+            display(0);
+        });
+        shortcut.add('l', function () {
+            getmonthCountInput().selectedIndex < 1 ? false : getmonthCountInput().selectedIndex -= 1;
+            display(0);
+        });
+    </script>
+  </body>
+</html>
