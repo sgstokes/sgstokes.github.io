@@ -104,15 +104,19 @@ h6 {
 table {
   border-collapse: collapse;
   border-spacing: 0;
-  width: 100%;
+  max-width: 100%;
 }
 
 th {
   border: 1px solid #cccccc;
+  padding-right: 4px;
+  padding-left: 4px;
 }
 
 td {
   border: 1px solid #eaeaea;
+  padding-right: 4px;
+  padding-left: 4px;
   vertical-align: top;
 }
 
