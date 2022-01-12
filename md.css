@@ -128,6 +128,6 @@ tr:nth-child(even) {
   border-color: #cccccc;
 }
 
-.vscode-light table > tbody > tr + tr > td {
+.vscode-light table > tbody > tr > td {
   border-color: #eaeaea;
 }
