@@ -272,7 +272,7 @@
   <p class="hint">
     <kbd>J</kbd><kbd>K</kbd> year &nbsp;&#183;&nbsp;
     <kbd>H</kbd><kbd>L</kbd> months &nbsp;&#183;&nbsp;
-    <kbd>X</kbd> clear highlights &nbsp;&#183;&nbsp;
+    <kbd>R</kbd> clear highlights &nbsp;&#183;&nbsp;
     <kbd>T</kbd> today &nbsp;&#183;&nbsp;
     click or drag to highlight &nbsp;&#183;&nbsp;
     click month name to highlight month
@@ -288,12 +288,15 @@
       DOW_LABELS:  ['S','M','T','W','T','F','S'],
       // Format: 'YYYY-MM-DD'
       HOLIDAYS: new Set([
-        '2025-01-01','2025-01-20','2025-02-17','2025-05-26','2025-07-04',
-        '2025-09-01','2025-10-13','2025-11-11','2025-11-27','2025-12-25',
+        '2025-01-01','2025-01-20','2025-02-17','2025-05-26',
+        '2025-07-04','2025-09-01','2025-10-13','2025-11-11','2025-11-27','2025-12-25',
         '2026-01-01','2026-01-19','2026-02-16','2026-05-25','2026-07-03',
         '2026-09-07','2026-11-11','2026-11-26','2026-12-25',
       ]),
-      VACATIONS: new Set([]),
+      VACATIONS: new Set([
+        '2026-07-02','2026-07-03','2026-07-04','2026-07-05','2026-07-06','2026-07-07',
+        '2026-12-28','2026-12-29','2026-12-30','2026-12-31',
+      ]),
     };
 
     // ── Date helpers ────────────────────────────────────────────
@@ -536,6 +539,9 @@
         T:          () => goToYear(today.getFullYear()),
         x:          () => { highlighted.clear(); for (const el of getAllDayCells()) el.classList.remove('highlighted'); },
         X:          () => { highlighted.clear(); for (const el of getAllDayCells()) el.classList.remove('highlighted'); },
+        r:          () => { highlighted.clear(); for (const el of getAllDayCells()) el.classList.remove('highlighted'); },
+        R:          () => { highlighted.clear(); for (const el of getAllDayCells()) el.classList.remove('highlighted'); },
+        Escape:     () => { highlighted.clear(); for (const el of getAllDayCells()) el.classList.remove('highlighted'); },
         h:          () => {
           if (monthCountInput.selectedIndex < monthCountInput.options.length - 1) {
             monthCountInput.selectedIndex++;
