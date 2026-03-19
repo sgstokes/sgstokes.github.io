@@ -4,11 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Year Calendar</title>
+  <link rel="icon" href="data:image/x-icon;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAABmJLR0QAAAAAAAD5Q7t/AAAACXBIWXMAAABgAAAAYADwa0LPAAAA+UlEQVRo3u2ZywrCMBBFj+JW/QG7rd+uVFy78I9UMD8QF1WQ0lcysdPIHMii5MG9nWSSNmDosojo4xOMkWy8Zeo3MjVmQJshAwVQAY56rvqWNl5YusZzwBnYx5orgHsCgdLyeGsJppqB+E85donsS1kOWMeGLzEO2IYa8MyLVq1/n4VmjxnQJnsDq4C20lNnKKOyYPYRMAPahKyBJkNfUtL6UWQfATOgjWQNDM1Zaf0oso+AGdDG9gFtzIA2tg9oYwa0MQPa9GUhB2y+njX/lT67KvoicFUU3OQS06mkvlzQvhu4AbtY5yVwog7h1MKfwEEi3jAM4/e8AF+errALe2arAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDIxLTA0LTA5VDEyOjA2OjM0KzAwOjAwpSoGhAAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyMS0wNC0wOVQxMjowNjozNCswMDowMNR3vjgAAAAASUVORK5CYII=" />
+  <link rel="apple-touch-icon" href="data:image/x-icon;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAABmJLR0QAAAAAAAD5Q7t/AAAACXBIWXMAAABgAAAAYADwa0LPAAAA+UlEQVRo3u2ZywrCMBBFj+JW/QG7rd+uVFy78I9UMD8QF1WQ0lcysdPIHMii5MG9nWSSNmDosojo4xOMkWy8Zeo3MjVmQJshAwVQAY56rvqWNl5YusZzwBnYx5orgHsCgdLyeGsJppqB+E85donsS1kOWMeGLzEO2IYa8MyLVq1/n4VmjxnQJnsDq4C20lNnKKOyYPYRMAPahKyBJkNfUtL6UWQfATOgjWQNDM1Zaf0oso+AGdDG9gFtzIA2tg9oYwa0MQPa9GUhB2y+njX/lT67KvoicFUU3OQS06mkvlzQvhu4AbtY5yVwog7h1MKfwEEi3jAM4/e8AF+errALe2arAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDIxLTA0LTA5VDEyOjA2OjM0KzAwOjAwpSoGhAAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyMS0wNC0wOVQxMjowNjozNCswMDowMNR3vjgAAAAASUVORK5CYII=" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
   <style>
-    /* ── Design tokens ───────────────────────────────────────── */
     :root {
       --bg:           #f5f0e8;
       --paper:        #faf7f2;
@@ -29,24 +30,21 @@
       --header-bg:    #e8e0d0;
       --border:       #d4c9b0;
       --radius:       4px;
-      --font-mono:    'DM Mono', 'Courier New', monospace;
-      --font-display: 'Playfair Display', Georgia, serif;
+      --font:         'DM Mono', 'Courier New', monospace;
     }
 
-    /* ── Reset & base ────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       background: var(--bg);
       color: var(--ink);
-      font-family: var(--font-mono);
+      font-family: var(--font);
       font-size: 13px;
       min-height: 100vh;
       padding: 24px 16px 48px;
       -webkit-font-smoothing: antialiased;
     }
 
-    /* ── Toolbar ─────────────────────────────────────────────── */
     .toolbar {
       display: flex;
       align-items: center;
@@ -71,37 +69,41 @@
       border: none;
       cursor: pointer;
       color: var(--ink);
-      font-family: var(--font-mono);
-      font-size: 13px;
-      padding: 4px 8px;
+      font-family: var(--font);
+      font-size: 15px;
+      padding: 3px 8px;
       border-radius: var(--radius);
       transition: background 0.15s, color 0.15s;
       line-height: 1;
     }
-    .btn:hover { background: var(--header-bg); }
+    .btn:hover  { background: var(--header-bg); }
     .btn:active { background: var(--border); }
 
     .btn-accent {
       background: var(--ink);
       color: var(--paper);
+      font-size: 13px;
       padding: 5px 12px;
     }
     .btn-accent:hover { background: var(--accent); color: #fff; }
 
     #yearInput {
-      width: 4ch;
+      width: 4.5ch;
       text-align: center;
-      background: none;
+      background: transparent;
       border: none;
-      border-bottom: 1px solid var(--border);
-      font-family: var(--font-display);
+      border-bottom: 2px solid var(--border);
+      font-family: var(--font);
       font-size: 18px;
-      font-weight: 700;
+      font-weight: 500;
       color: var(--ink);
       padding: 2px 0;
       outline: none;
       transition: border-color 0.15s;
+      -moz-appearance: textfield;
     }
+    #yearInput::-webkit-outer-spin-button,
+    #yearInput::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     #yearInput:focus { border-color: var(--accent); }
 
     .divider { width: 1px; height: 24px; background: var(--border); margin: 0 4px; }
@@ -111,7 +113,7 @@
       border: 1px solid var(--border);
       border-radius: var(--radius);
       color: var(--ink);
-      font-family: var(--font-mono);
+      font-family: var(--font);
       font-size: 13px;
       padding: 5px 8px;
       cursor: pointer;
@@ -119,7 +121,6 @@
     }
     select:focus { border-color: var(--accent); }
 
-    /* ── Legend ──────────────────────────────────────────────── */
     .legend {
       display: flex;
       justify-content: center;
@@ -136,18 +137,9 @@
       letter-spacing: 0.05em;
       text-transform: uppercase;
     }
-    .legend-swatch {
-      width: 10px;
-      height: 10px;
-      border-radius: 2px;
-    }
+    .legend-swatch { width: 10px; height: 10px; border-radius: 2px; }
 
-    /* ── Calendar grid ───────────────────────────────────────── */
-    #calDiv {
-      overflow-x: auto;
-      padding-bottom: 8px;
-      -webkit-user-drag: none;
-    }
+    #calDiv { overflow-x: auto; padding-bottom: 8px; }
 
     .cal-grid {
       display: grid;
@@ -158,7 +150,6 @@
       margin: 0 auto;
     }
 
-    /* ── Month table ─────────────────────────────────────────── */
     .month {
       background: var(--paper);
       border: 1px solid var(--border);
@@ -177,10 +168,11 @@
       background: var(--header-bg);
       text-align: center;
       padding: 8px 4px 6px;
-      font-family: var(--font-display);
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 0.03em;
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
       color: var(--ink);
       cursor: pointer;
       user-select: none;
@@ -189,12 +181,8 @@
     }
     .month-header:hover { background: var(--border); }
 
-    .month table {
-      width: 100%;
-      border-collapse: collapse;
-    }
+    .month table { width: 100%; border-collapse: collapse; }
 
-    /* Day-of-week header row */
     .dow {
       text-align: center;
       padding: 4px 2px 3px;
@@ -207,7 +195,6 @@
       user-select: none;
     }
 
-    /* Day cells */
     .day {
       text-align: center;
       padding: 3px 2px;
@@ -218,28 +205,16 @@
       transition: background 0.1s, color 0.1s;
       min-width: 22px;
     }
+    .day.empty       { cursor: default; pointer-events: none; }
+    .day.weekend     { color: var(--weekend-fg); }
+    .day.holiday     { background: var(--holiday-bg); color: var(--holiday-fg); font-weight: 500; }
+    .day.vacation    { background: var(--vacation-bg); color: var(--vacation-fg); font-weight: 500; }
+    .day.today       { background: var(--today-bg); color: var(--today-fg); font-weight: 700; border-radius: 2px; }
+    .day.highlighted { background: var(--highlight-bg); color: var(--highlight-fg); font-weight: 700; }
+
     .day:hover:not(.empty):not(.highlighted) { background: var(--accent-light); }
+    .day.highlighted:hover { filter: brightness(0.93); }
 
-    .day.empty { cursor: default; pointer-events: none; }
-    .day.weekend { color: var(--weekend-fg); }
-    .day.holiday { background: var(--holiday-bg); color: var(--holiday-fg); font-weight: 500; }
-    .day.vacation { background: var(--vacation-bg); color: var(--vacation-fg); font-weight: 500; }
-    .day.today {
-      background: var(--today-bg);
-      color: var(--today-fg);
-      font-weight: 700;
-      border-radius: 2px;
-    }
-    .day.highlighted {
-      background: var(--highlight-bg);
-      color: var(--highlight-fg);
-      font-weight: 700;
-    }
-    .day.highlighted:hover {
-      background: color-mix(in srgb, var(--highlight-bg) 80%, #000 20%);
-    }
-
-    /* ── Keyboard hint ───────────────────────────────────────── */
     .hint {
       text-align: center;
       margin-top: 28px;
@@ -252,13 +227,12 @@
       border: 1px solid var(--border);
       border-radius: 3px;
       padding: 1px 5px;
-      font-family: var(--font-mono);
+      font-family: var(--font);
       font-size: 10px;
       background: var(--paper);
       color: var(--ink-muted);
     }
 
-    /* ── Responsive ──────────────────────────────────────────── */
     @media (max-width: 700px) {
       .cal-grid { grid-template-columns: repeat(2, minmax(140px, 180px)); }
     }
@@ -269,29 +243,15 @@
 </head>
 <body>
 
-  <!-- ── Toolbar ─────────────────────────────────────────────── -->
   <div class="toolbar" role="toolbar" aria-label="Calendar navigation">
     <div class="year-nav">
-      <button class="btn" id="prevBtn" aria-label="Previous year" title="Previous year (← or J)">&#8249;</button>
-      <input
-        id="yearInput"
-        type="number"
-        min="1"
-        max="9999"
-        maxlength="4"
-        aria-label="Year"
-        title="Type a year and press Enter"
-      />
-      <button class="btn" id="nextBtn" aria-label="Next year" title="Next year (→ or K)">&#8250;</button>
+      <button class="btn" id="prevBtn" aria-label="Previous year" title="Previous year">&#8249;</button>
+      <input id="yearInput" type="number" min="1" max="9999" aria-label="Year" />
+      <button class="btn" id="nextBtn" aria-label="Next year"  title="Next year">&#8250;</button>
     </div>
-
-    <button class="btn btn-accent" id="todayBtn" title="Go to current year (T)">This year</button>
-
+    <button class="btn btn-accent" id="todayBtn">This year</button>
     <div class="divider" role="separator"></div>
-
-    <label for="monthCountInput" style="font-size:11px;color:var(--ink-muted);letter-spacing:.05em;text-transform:uppercase;">
-      Months
-    </label>
+    <label for="monthCountInput" style="font-size:11px;color:var(--ink-muted);letter-spacing:.05em;text-transform:uppercase;">Months</label>
     <select id="monthCountInput" aria-label="Number of months to display">
       <option value="12">12</option>
       <option value="16">16</option>
@@ -300,240 +260,83 @@
     </select>
   </div>
 
-  <!-- ── Legend ──────────────────────────────────────────────── -->
   <div class="legend" aria-label="Legend">
-    <div class="legend-item">
-      <div class="legend-swatch" style="background:var(--today-bg)"></div>
-      Today
-    </div>
-    <div class="legend-item">
-      <div class="legend-swatch" style="background:var(--holiday-bg);border:1px solid var(--holiday-fg)"></div>
-      Holiday
-    </div>
-    <div class="legend-item">
-      <div class="legend-swatch" style="background:var(--vacation-bg);border:1px solid var(--vacation-fg)"></div>
-      Vacation
-    </div>
-    <div class="legend-item">
-      <div class="legend-swatch" style="background:var(--highlight-bg)"></div>
-      Highlighted
-    </div>
+    <div class="legend-item"><div class="legend-swatch" style="background:var(--today-bg)"></div>Today</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:var(--holiday-bg);border:1px solid var(--holiday-fg)"></div>Holiday</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:var(--vacation-bg);border:1px solid var(--vacation-fg)"></div>Vacation</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:var(--highlight-bg)"></div>Highlighted</div>
   </div>
 
-  <!-- ── Calendar output ─────────────────────────────────────── -->
   <div id="calDiv" role="main" aria-live="polite" aria-label="Calendar"></div>
 
-  <!-- ── Keyboard hint ───────────────────────────────────────── -->
   <p class="hint">
-    <kbd>←</kbd><kbd>→</kbd> year &nbsp;·&nbsp;
-    <kbd>↑</kbd><kbd>↓</kbd> months &nbsp;·&nbsp;
-    <kbd>T</kbd> today &nbsp;·&nbsp; click days to highlight
+    <kbd>&#8592;</kbd><kbd>&#8594;</kbd> year &nbsp;&#183;&nbsp;
+    <kbd>H</kbd><kbd>L</kbd> months &nbsp;&#183;&nbsp;
+    <kbd>X</kbd> clear highlights &nbsp;&#183;&nbsp;
+    <kbd>T</kbd> today &nbsp;&#183;&nbsp;
+    click or drag to highlight &nbsp;&#183;&nbsp;
+    click month name to highlight month
   </p>
 
   <script>
     'use strict';
 
-    // ── Configuration (edit this section) ──────────────────────
+    // ── Configuration (edit here) ───────────────────────────────
     const CONFIG = {
-      /** Names of months */
-      MONTH_NAMES: [
-        'January','February','March','April',
-        'May','June','July','August',
-        'September','October','November','December',
-      ],
-
-      /** Day-of-week column headers (Sun → Sat) */
-      DOW_LABELS: ['S','M','T','W','T','F','S'],
-
-      /**
-       * Holidays — dates to highlight in red.
-       * Format: 'YYYY-MM-DD'
-       */
+      MONTH_NAMES: ['January','February','March','April','May','June',
+                    'July','August','September','October','November','December'],
+      DOW_LABELS:  ['S','M','T','W','T','F','S'],
+      // Format: 'YYYY-MM-DD'
       HOLIDAYS: new Set([
-        '2025-01-01', // New Year's Day
-        '2025-01-20', // MLK Day
-        '2025-02-17', // Presidents' Day
-        '2025-05-26', // Memorial Day
-        '2025-07-04', // Independence Day
-        '2025-09-01', // Labor Day
-        '2025-10-13', // Columbus Day
-        '2025-11-11', // Veterans Day
-        '2025-11-27', // Thanksgiving
-        '2025-12-25', // Christmas
-        '2026-01-01',
-        '2026-01-19',
-        '2026-02-16',
-        '2026-05-25',
-        '2026-07-03',
-        '2026-09-07',
-        '2026-11-11',
-        '2026-11-26',
-        '2026-12-25',
+        '2025-01-01','2025-01-20','2025-02-17','2025-05-26','2025-07-04',
+        '2025-09-01','2025-10-13','2025-11-11','2025-11-27','2025-12-25',
+        '2026-01-01','2026-01-19','2026-02-16','2026-05-25','2026-07-03',
+        '2026-09-07','2026-11-11','2026-11-26','2026-12-25',
       ]),
-
-      /**
-       * Vacation days — dates to highlight in green.
-       * Format: 'YYYY-MM-DD'
-       */
-      VACATIONS: new Set([
-        // Add your vacation days here, e.g.:
-        // '2026-07-07',
-        // '2026-07-08',
-      ]),
+      VACATIONS: new Set([]),
     };
-    // ── End configuration ───────────────────────────────────────
+
+    // ── Date helpers ────────────────────────────────────────────
+    function isoDate(y, m, d) {
+      return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    }
+    function isLeapYear(y) {
+      return (y % 400 === 0) || (y % 4 === 0 && y % 100 !== 0);
+    }
+    function daysInMonth(y, m) {
+      const D = [31,28,31,30,31,30,31,31,30,31,30,31];
+      return (m === 1 && isLeapYear(y)) ? 29 : D[m];
+    }
+    function weeksInMonth(y, m) {
+      // Normalize overflow months (e.g. month 13 -> Jan of next year)
+      if (m > 11) { y += Math.floor(m / 12); m = m % 12; }
+      return Math.ceil((new Date(y, m, 1).getDay() + daysInMonth(y, m)) / 7);
+    }
 
     // ── State ───────────────────────────────────────────────────
-    const highlighted = new Set();
-    const today       = new Date();
-    const todayKey    = isoDate(today.getFullYear(), today.getMonth(), today.getDate());
+    const today            = new Date();
+    const todayKey         = isoDate(today.getFullYear(), today.getMonth(), today.getDate());
+    let   lastRenderedYear = today.getFullYear();
+    const highlighted      = new Set();
 
     // ── DOM refs ────────────────────────────────────────────────
     const yearInput       = document.getElementById('yearInput');
     const monthCountInput = document.getElementById('monthCountInput');
     const calDiv          = document.getElementById('calDiv');
-    const prevBtn         = document.getElementById('prevBtn');
-    const nextBtn         = document.getElementById('nextBtn');
-    const todayBtn        = document.getElementById('todayBtn');
 
-    // ── Helpers ─────────────────────────────────────────────────
-
-    /** Zero-padded ISO date string YYYY-MM-DD */
-    function isoDate(y, m, d) {
-      return `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-    }
-
-    /** True if year y is a leap year */
-    function isLeapYear(y) {
-      return (y % 400 === 0) || (y % 4 === 0 && y % 100 !== 0);
-    }
-
-    /** Number of days in month m (0-based) of year y */
-    function daysInMonth(y, m) {
-      const DAYS = [31,28,31,30,31,30,31,31,30,31,30,31];
-      return (m === 1 && isLeapYear(y)) ? 29 : DAYS[m];
-    }
-
-    /** Max calendar rows needed for month m of year y */
-    function weeksInMonth(y, m) {
-      const firstDow = new Date(y, m, 1).getDay();
-      return Math.ceil((firstDow + daysInMonth(y, m)) / 7);
-    }
-
-    /** Read the year currently in the input; returns NaN if invalid */
-    function readYear() {
-      return parseInt(yearInput.value, 10);
-    }
-
-    // ── Rendering ───────────────────────────────────────────────
-
-    /**
-     * Build the DOM for a single month.
-     * @param {number} y    - calendar year (may be adjusted when m > 11)
-     * @param {number} m    - 0-based month index
-     * @param {number} rows - minimum number of week rows to render
-     */
-    function buildMonth(y, m, rows) {
-      // Overflow into next year
-      if (m > 11) { m -= 12; y += 1; }
-
-      const dim      = daysInMonth(y, m);
-      const firstDow = new Date(y, m, 1).getDay();
-
-      // Wrapper
-      const wrapper = document.createElement('div');
-      wrapper.className = 'month';
-
-      // Header
-      const header = document.createElement('div');
-      header.className = 'month-header';
-      header.textContent = `${CONFIG.MONTH_NAMES[m]} ${y}`;
-      header.title = 'Click to highlight all days in this month';
-      header.addEventListener('click', () => toggleMonthHighlight(y, m, dim));
-      wrapper.appendChild(header);
-
-      // Table
-      const table = document.createElement('table');
-      table.setAttribute('role', 'grid');
-      table.setAttribute('aria-label', `${CONFIG.MONTH_NAMES[m]} ${y}`);
-
-      // DOW header row
-      const headRow = document.createElement('tr');
-      for (const label of CONFIG.DOW_LABELS) {
-        const th = document.createElement('th');
-        th.className = 'dow';
-        th.scope = 'col';
-        th.textContent = label;
-        headRow.appendChild(th);
-      }
-      table.appendChild(headRow);
-
-      // Day cells
-      let col = 0;
-      let currentRow = null;
-      let weekCount  = 0;
-
-      for (let d = 1 - firstDow; ; ++d) {
-        const dow = col % 7;
-
-        // Stop once we've rendered the required rows
-        if (weekCount >= rows && dow === 0) break;
-
-        if (dow === 0) {
-          currentRow = document.createElement('tr');
-          table.appendChild(currentRow);
-          ++weekCount;
-        }
-
-        const td = document.createElement('td');
-        const inMonth = d >= 1 && d <= dim;
-
-        if (!inMonth) {
-          td.className = 'day empty';
-          td.setAttribute('aria-hidden', 'true');
-        } else {
-          const key  = isoDate(y, m, d);
-          const isWE = dow === 0 || dow === 6;
-
-          let cls = 'day';
-          if (key === todayKey)              cls += ' today';
-          else if (CONFIG.HOLIDAYS.has(key)) cls += ' holiday';
-          else if (CONFIG.VACATIONS.has(key)) cls += ' vacation';
-          else if (isWE)                     cls += ' weekend';
-
-          if (highlighted.has(key)) cls += ' highlighted';
-
-          td.className = cls;
-          td.textContent = d;
-          td.dataset.key = key;
-          td.setAttribute('role', 'gridcell');
-          td.setAttribute('aria-label',
-            `${CONFIG.MONTH_NAMES[m]} ${d}, ${y}${key === todayKey ? ' (today)' : ''}`);
-          td.addEventListener('mousedown', e => onDayMousedown(e, key));
-          td.addEventListener('mouseenter', () => onDayMouseenter(key));
-        }
-
-        currentRow.appendChild(td);
-        ++col;
-      }
-
-      wrapper.appendChild(table);
-      return wrapper;
-    }
-
-    // ── Drag-to-highlight ──────────────────────────────────────
+    // ── Drag-to-highlight ───────────────────────────────────────
     let dragActive             = false;
     let dragStartKey           = null;
-    let dragMode               = null;   // 'add' | 'remove'
+    let dragMode               = null;
     let highlightedAtDragStart = null;
 
     function getAllDayCells() {
-      return document.querySelectorAll('#calDiv [data-key]');
+      return calDiv.querySelectorAll('[data-key]');
     }
 
     function applyHighlightSet(keys, add) {
       for (const key of keys) {
-        const el = document.querySelector(`#calDiv [data-key="${key}"]`);
+        const el = calDiv.querySelector(`[data-key="${key}"]`);
         if (!el) continue;
         if (add) { highlighted.add(key);    el.classList.add('highlighted'); }
         else     { highlighted.delete(key); el.classList.remove('highlighted'); }
@@ -561,11 +364,10 @@
 
     function onDayMouseenter(key) {
       if (!dragActive) return;
-      // Restore snapshot, then paint the current drag range on top
       for (const el of getAllDayCells()) {
         const k = el.dataset.key;
         if (highlightedAtDragStart.has(k)) {
-          highlighted.add(k); el.classList.add('highlighted');
+          highlighted.add(k);    el.classList.add('highlighted');
         } else {
           highlighted.delete(k); el.classList.remove('highlighted');
         }
@@ -578,40 +380,111 @@
       dragStartKey = dragMode = highlightedAtDragStart = null;
     });
 
-    /** Toggle highlight on all days in a month (click the month header) */
+    // ── Rendering ───────────────────────────────────────────────
     function toggleMonthHighlight(y, m, dim) {
       let count = 0;
-      for (let d = 1; d <= dim; ++d) {
-        if (highlighted.has(isoDate(y, m, d))) ++count;
+      for (let d = 1; d <= dim; d++) {
+        if (highlighted.has(isoDate(y, m, d))) count++;
       }
-      const add = count < dim / 2;
+      const add  = count < dim / 2;
       const keys = new Set();
-      for (let d = 1; d <= dim; ++d) keys.add(isoDate(y, m, d));
+      for (let d = 1; d <= dim; d++) keys.add(isoDate(y, m, d));
       applyHighlightSet(keys, add);
     }
 
-    /**
-     * Render the full calendar for year y.
-     * Stagger animation delays for a subtle cascade effect.
-     */
+    function buildMonth(baseY, baseM, rows) {
+      let y = baseY, m = baseM;
+      if (m > 11) { m -= 12; y++; }
+
+      const dim      = daysInMonth(y, m);
+      const firstDow = new Date(y, m, 1).getDay();
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'month';
+
+      const header = document.createElement('div');
+      header.className   = 'month-header';
+      header.textContent = `${CONFIG.MONTH_NAMES[m]} ${y}`;
+      header.title       = 'Click to highlight / clear entire month';
+      header.addEventListener('click', () => toggleMonthHighlight(y, m, dim));
+      wrapper.appendChild(header);
+
+      const table = document.createElement('table');
+      table.setAttribute('role', 'grid');
+      table.setAttribute('aria-label', `${CONFIG.MONTH_NAMES[m]} ${y}`);
+
+      const headRow = document.createElement('tr');
+      for (const label of CONFIG.DOW_LABELS) {
+        const th = document.createElement('th');
+        th.className   = 'dow';
+        th.scope       = 'col';
+        th.textContent = label;
+        headRow.appendChild(th);
+      }
+      table.appendChild(headRow);
+
+      let col = 0, weekCount = 0, currentRow = null;
+
+      for (let d = 1 - firstDow; ; d++) {
+        const dow = col % 7;
+        if (weekCount >= rows && dow === 0) break;
+
+        if (dow === 0) {
+          currentRow = document.createElement('tr');
+          table.appendChild(currentRow);
+          weekCount++;
+        }
+
+        const td      = document.createElement('td');
+        const inMonth = d >= 1 && d <= dim;
+
+        if (!inMonth) {
+          td.className = 'day empty';
+          td.setAttribute('aria-hidden', 'true');
+        } else {
+          const key  = isoDate(y, m, d);
+          const isWE = dow === 0 || dow === 6;
+
+          const cls = ['day'];
+          if      (key === todayKey)           cls.push('today');
+          else if (CONFIG.HOLIDAYS.has(key))   cls.push('holiday');
+          else if (CONFIG.VACATIONS.has(key))  cls.push('vacation');
+          else if (isWE)                       cls.push('weekend');
+          if (highlighted.has(key))            cls.push('highlighted');
+
+          td.className   = cls.join(' ');
+          td.textContent = d;
+          td.dataset.key = key;
+          td.setAttribute('role', 'gridcell');
+          td.setAttribute('aria-label',
+            `${CONFIG.MONTH_NAMES[m]} ${d}, ${y}${key === todayKey ? ' (today)' : ''}`);
+
+          td.addEventListener('mousedown',  e => onDayMousedown(e, key));
+          td.addEventListener('mouseenter', () => onDayMouseenter(key));
+        }
+
+        currentRow.appendChild(td);
+        col++;
+      }
+
+      wrapper.appendChild(table);
+      return wrapper;
+    }
+
     function showYear(y) {
       const count = parseInt(monthCountInput.value, 10);
       const grid  = document.createElement('div');
       grid.className = 'cal-grid';
 
       for (let m = 0; m < count; m += 4) {
-        // Compute uniform row height for this group of 4
         const rowWeeks = Math.max(
-          weeksInMonth(y, m),
-          weeksInMonth(y, m + 1),
-          weeksInMonth(y, m + 2),
-          weeksInMonth(y, m + 3),
+          weeksInMonth(y, m),     weeksInMonth(y, m + 1),
+          weeksInMonth(y, m + 2), weeksInMonth(y, m + 3)
         );
-
-        for (let col = 0; col < 4 && m + col < count; ++col) {
-          const monthEl = buildMonth(y, m + col, rowWeeks);
-          monthEl.style.animationDelay = `${(m + col) * 25}ms`;
-          grid.appendChild(monthEl);
+        for (let col = 0; col < 4 && m + col < count; col++) {
+          const el = buildMonth(y, m + col, rowWeeks);
+          el.style.animationDelay = `${(m + col) * 25}ms`;
+          grid.appendChild(el);
         }
       }
 
@@ -619,41 +492,39 @@
     }
 
     // ── Navigation ──────────────────────────────────────────────
-
     function goToYear(y) {
       if (isNaN(y) || y < 1 || y > 9999) {
-        yearInput.value = readYear() || today.getFullYear();
+        yearInput.value = lastRenderedYear;
         return;
       }
-      yearInput.value = y;
+      lastRenderedYear = y;
+      yearInput.value  = y;
       showYear(y);
     }
 
     function shiftYear(delta) {
-      goToYear((readYear() || today.getFullYear()) + delta);
-    }
-
-    function goToToday() {
-      goToYear(today.getFullYear());
+      goToYear(lastRenderedYear + delta);
     }
 
     // ── Event wiring ─────────────────────────────────────────────
-
-    prevBtn.addEventListener('click', () => shiftYear(-1));
-    nextBtn.addEventListener('click', () => shiftYear(+1));
-    todayBtn.addEventListener('click', goToToday);
+    document.getElementById('prevBtn').addEventListener('click', () => shiftYear(-1));
+    document.getElementById('nextBtn').addEventListener('click', () => shiftYear(+1));
+    document.getElementById('todayBtn').addEventListener('click', () => goToYear(today.getFullYear()));
 
     yearInput.addEventListener('keydown', e => {
-      if (e.key === 'Enter') { e.preventDefault(); goToYear(readYear()); }
+      if (e.key === 'Enter') { e.preventDefault(); yearInput.blur(); }
     });
-    // Also update on blur (tab-away)
-    yearInput.addEventListener('blur', () => goToYear(readYear()));
+    yearInput.addEventListener('blur', () => {
+      const y = parseInt(yearInput.value, 10);
+      if (!isNaN(y) && y >= 1 && y <= 9999) goToYear(y);
+      else yearInput.value = lastRenderedYear;
+    });
 
-    monthCountInput.addEventListener('change', () => goToYear(readYear()));
+    monthCountInput.addEventListener('change', () => showYear(lastRenderedYear));
 
-    // ── Keyboard shortcuts ───────────────────────────────────────
+
     document.addEventListener('keydown', e => {
-      // Ignore when typing in an input or select
+      if (document.activeElement === yearInput) return;
       if (['INPUT','SELECT','TEXTAREA'].includes(e.target.tagName)) return;
 
       const actions = {
@@ -661,39 +532,43 @@
         j:          () => shiftYear(-1),
         ArrowRight: () => shiftYear(+1),
         k:          () => shiftYear(+1),
-        t:          () => goToToday(),
-        T:          () => goToToday(),
-        ArrowUp:    () => {
+        t:          () => goToYear(today.getFullYear()),
+        T:          () => goToYear(today.getFullYear()),
+        x:          () => { highlighted.clear(); for (const el of getAllDayCells()) el.classList.remove('highlighted'); },
+        X:          () => { highlighted.clear(); for (const el of getAllDayCells()) el.classList.remove('highlighted'); },
+        h:          () => {
           if (monthCountInput.selectedIndex < monthCountInput.options.length - 1) {
             monthCountInput.selectedIndex++;
-            goToYear(readYear());
+            showYear(lastRenderedYear);
           }
         },
-        ArrowDown:  () => {
+        H:          () => {
+          if (monthCountInput.selectedIndex < monthCountInput.options.length - 1) {
+            monthCountInput.selectedIndex++;
+            showYear(lastRenderedYear);
+          }
+        },
+        l:          () => {
           if (monthCountInput.selectedIndex > 0) {
             monthCountInput.selectedIndex--;
-            goToYear(readYear());
+            showYear(lastRenderedYear);
+          }
+        },
+        L:          () => {
+          if (monthCountInput.selectedIndex > 0) {
+            monthCountInput.selectedIndex--;
+            showYear(lastRenderedYear);
           }
         },
       };
 
-      if (actions[e.key]) {
-        e.preventDefault();
-        actions[e.key]();
-      }
+      if (actions[e.key]) { e.preventDefault(); actions[e.key](); }
     });
 
     // ── Init ─────────────────────────────────────────────────────
     (function init() {
-      const y = today.getFullYear();
-      yearInput.value = y;
-
-      // Auto-expand to 16 months when we're in the second half of the year
-      if (today.getMonth() > 6) {
-        monthCountInput.value = '16';
-      }
-
-      showYear(y);
+      if (today.getMonth() > 6) monthCountInput.value = '16';
+      goToYear(today.getFullYear());
     })();
   </script>
 </body>
